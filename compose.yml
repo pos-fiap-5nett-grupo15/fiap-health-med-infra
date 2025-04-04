@@ -1,0 +1,16 @@
+services:
+  sql-server:
+    image: mssql-hack:latest
+    container_name: sql-server-1
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Q1w2e3r4
+      - SVC_PASS=Q1w2e3r4
+    ports:
+      - "1433:1433"
+    networks:
+      - default
+  
+networks:
+  default:
+    driver: bridge
