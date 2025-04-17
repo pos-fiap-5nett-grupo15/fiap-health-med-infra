@@ -1,3 +1,9 @@
+x-common-environment: &common-environment
+  ASPNETCORE_ENVIRONMENT: Development
+  ConnectionStrings__DefaultConnection: Server=sql-server,1433;Database=medschedule;User Id=migration_user;Password=Q1w2e3r4;TrustServerCertificate=True;MultipleActiveResultSets=true;
+  ConnectionStrings__DatabaseDllConnection: Server=sql-server;Database=medschedule;User Id=migration_user;Password=Q1w2e3r4;TrustServerCertificate=True;
+  ProducerSettings__Host: rabbit-mq
+
 services:
   sql-server:
     image: mssql-hack:latest
@@ -24,13 +30,21 @@ services:
     ports:
       - "80:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sql-server,1433;Database=medschedule;User Id=migration_user;Password=Q1w2e3r4;TrustServerCertificate=True;MultipleActiveResultSets=true;
-      - ConnectionStrings__DatabaseDllConnection=Server=sql-server;Database=medschedule;User Id=migration_user;Password=Q1w2e3r4;TrustServerCertificate=True;
-      - ProducerSettings__Host=rabbit-mq
+      <<: *common-environment
     depends_on:
       - sql-server
     entrypoint: ["./wait-for-it.sh", "sql-server:1433", "--", "dotnet", "Fiap.Health.Med.Schedule.Manager.Api.dll"]
+    networks:
+      - default
+  schedule-worker:
+    image: schedule-worker
+    container_name: schedule-worker-1
+    environment:
+      ConsumerSettings__Host: rabbit-mq
+      <<: *common-environment
+    depends_on:
+      - sql-server
+    entrypoint: ["./wait-for-it.sh", "sql-server:1433", "--","./wait-for-it.sh", "rabbit-mq:5672", "--", "dotnet", "Fiap.Health.Med.Schedule.Manager.Worker.dll"]
     networks:
       - default
 
