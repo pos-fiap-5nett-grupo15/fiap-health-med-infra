@@ -47,7 +47,18 @@ services:
     entrypoint: ["./wait-for-it.sh", "sql-server:1433", "--","./wait-for-it.sh", "rabbit-mq:5672", "--", "dotnet", "Fiap.Health.Med.Schedule.Manager.Worker.dll"]
     networks:
       - default
-
+  user-app:
+    image: user-app
+    container_name: user-app-1
+    ports:
+      - "81:8080"
+    environment:
+      <<: *common-environment
+    depends_on:
+      - sql-server
+    entrypoint: ["./wait-for-it.sh", "sql-server:1433", "--", "dotnet", "Fiap.Health.Med.User.Manager.Api.dll"]
+    networks:
+      - default
 networks:
   default:
     driver: bridge
