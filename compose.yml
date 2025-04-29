@@ -59,6 +59,20 @@ services:
     entrypoint: ["./wait-for-it.sh", "sql-server:1433", "--", "dotnet", "Fiap.Health.Med.User.Manager.Api.dll"]
     networks:
       - default
+  bff-app:
+    image: bff-app
+    container_name: bff-app-1
+    ports:
+      - "82:8080"
+    environment:
+      <<: *common-environment
+    depends_on:
+      - user-app
+      - schedule-worker
+      - schedule-app
+    entrypoint: ["./wait-for-it.sh", "user-app:8081", "--", "dotnet", "Fiap.Health.Med.Bff.Api.dll"]
+    networks:
+      - default
 networks:
   default:
     driver: bridge
