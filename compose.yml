@@ -62,10 +62,23 @@ services:
   bff-app:
     image: bff-app
     container_name: bff-app-1
+
+    environment:
+      ServicesSettings__UserService__BaseURL: http://user-app:81
+      ServicesSettings__UserService__Endpoints__0__Name: Doctor_GetOneByConcilAsync
+      ServicesSettings__UserService__Endpoints__0__Resource: Doctor
+      ServicesSettings__UserService__Endpoints__1__Name: Doctor_CreateAsync
+      ServicesSettings__UserService__Endpoints__1__Resource: Doctor
+      ServicesSettings__UserService__Endpoints__2__Name: Patient_GetOneByConcilAsync
+      ServicesSettings__UserService__Endpoints__2__Resource: Patient
+      ServicesSettings__UserService__Endpoints__3__Name: Patient_CreateAsync
+      ServicesSettings__UserService__Endpoints__3__Resource: Patient/Document
+      ServicesSettings__ScheduleService__BaseURL: http://schedule-app:80/
+      ServicesSettings__ScheduleService__Endpoints__0__Name: Schedule_UpdateAsync
+      ServicesSettings__ScheduleService__Endpoints__0__Resource: api/Schedule
+      <<: *common-environment
     ports:
       - "82:8080"
-    environment:
-      <<: *common-environment
     depends_on:
       - user-app
       - schedule-worker
