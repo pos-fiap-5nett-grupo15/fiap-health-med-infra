@@ -16,7 +16,7 @@ variables:
   dockerRegistryServiceConnection: $(_dockerRegistryServiceConnection)
   imageRepository: $(_imageRepository)
   containerRegistry: $(_containerRegistry)
-  dockerfilePath: $(System.DefaultWorkingDirectory)/infrastructure/docker/api/Dockerfile
+  dockerfilePath: $(System.DefaultWorkingDirectory)/sql-server/Dockerfile
 
 
 
