@@ -41,7 +41,7 @@ stages:
         command: buildAndPush
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(containerRegistry)
+        containerRegistry: $(_dockerRegistryServiceConnection)
         tags: |
           $(tag)
           latest
