@@ -1,0 +1,47 @@
+trigger:
+  branches:
+    include:
+      - feat/pipelines
+
+  paths:
+    include:
+      - sql-server/*
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
+  dockerRegistryServiceConnection: $(_dockerRegistryServiceConnection)
+  imageRepository: $(_imageRepository)
+  containerRegistry: $(_containerRegistry)
+  dockerfilePath: $(System.DefaultWorkingDirectory)/infrastructure/docker/api/Dockerfile
+
+
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: BuildSqlImage
+    displayName: Build SQL Server Docker Image
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo Show ws files.
+          echo $(ls)
+
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(containerRegistry)
+        tags: |
+          $(tag)
+          latest
