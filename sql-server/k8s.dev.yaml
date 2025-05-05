@@ -1,3 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile
+provisioner: file.csi.azure.com
+parameters:
+  skuName: Standard_LRS
+allowVolumeExpansion: true
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -8,8 +17,9 @@ spec:
     storage: 10Gi
   accessModes:
     - ReadWriteMany
+  storageClassName: azurefile
   azureFile:
-    secretName: tc4storage-secret
+    secretName: hkstorage-secret
     shareName: sql-server-fileshare
     readOnly: false
 ---
@@ -45,7 +55,7 @@ spec:
     spec:
       containers:
       - name: sql-server
-        image: PLACEHOLDER_CONTAINER_REGISTRY/sql-server-seed:latest
+        image: PLACEHOLDER_CONTAINER_REGISTRY/PLACEHOLDER_IMAGE_REPOSITORY:latest
         env:
         - name: ACCEPT_EULA
           valueFrom:
