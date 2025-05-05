@@ -17,8 +17,8 @@ variables:
   imageRepository: $(_imageRepository)
   containerRegistry: $(_containerRegistry)
   dockerfilePath: $(System.DefaultWorkingDirectory)/sql-server/Dockerfile
-
-
+  kubernetesServiceEndpoint: $(_kubernetesServiceEndpoint)
+  k8sNamespace: $(_k8sNamespace)
 
 stages:
 - stage: Build
