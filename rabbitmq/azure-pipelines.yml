@@ -9,7 +9,8 @@ trigger:
   paths:
     include:
       - rabbitmq/*
-
+    exclude:
+      - rabbitmq/README.md
 resources:
 - repo: self
 
