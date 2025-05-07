@@ -65,4 +65,3 @@ variable "kube_namespace" {
   default     = "hk"
   description = "Kubernetes configmap namespace"
 }
-
