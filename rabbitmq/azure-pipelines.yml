@@ -53,17 +53,6 @@ stages:
           $(tag)
           latest
 
-  - job: UploadArtifact
-    displayName: "Upload Deployment YAML"
-    dependsOn: Build
-    steps:
-
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml
-        artifact: $(k8s-deployment)
-        publishLocation: 'pipeline'
-
 - stage: Deploy
   displayName: Deploy Stage
   jobs:
