@@ -9,6 +9,11 @@ WORKDIR /usr/config
 # Bundle config source
 COPY . /usr/config
 
+#add mssql user
+RUN groupadd -g 10001 mssql && \
+    useradd -u 10001 -g mssql -s /bin/bash -m mssql
+
+USER mssql
 # Grant permissions
 RUN chmod +x /usr/config/entrypoint.sh
 RUN chmod +x /usr/config/configure-db.sh

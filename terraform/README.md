@@ -20,14 +20,6 @@ Os comando são os seguintes:
     az aks get-credentials --resource-group fiap-hackathon --name fiapaks --overwrite-existing
 ```
 
-  2. Criar o namespace no cluster. **(Obs: talvez seja possível criar este usando o terraform)**
-
-```shell
-    kubectl create namespace hk
-```
-
-3. Rodar o segundo terraform que está no folder ``./terraform/dev/kube-config``. Os comando são os mesmos do passo 1.
-
 4. Criar a secret do azure storage no cluster. Esta pode ser feita usando o seguinte comando:
 
 Caso a secret já exista, esta pode ser deletada:

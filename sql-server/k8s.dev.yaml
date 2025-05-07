@@ -56,6 +56,9 @@ spec:
       - name: sql-server-data
         persistentVolumeClaim:
           claimName: sql-server-pvc
+      securityContext:
+        runAsUser: 10001
+        fsGroup: 10001
 ---
 apiVersion: v1
 kind: Service
