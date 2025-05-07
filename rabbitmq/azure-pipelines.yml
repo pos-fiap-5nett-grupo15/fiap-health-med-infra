@@ -4,6 +4,7 @@ trigger:
     include:
       - main
       - dev
+      - feat/kubernetes
 
   paths:
     include:
