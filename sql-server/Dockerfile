@@ -11,7 +11,7 @@ COPY . /usr/config
 
 
 # Grant permissions
-RUN chmod 111 /usr/config/entrypoint.sh /usr/config/configure-db.sh
+RUN chmod +x /usr/config/entrypoint.sh /usr/config/configure-db.sh
 
 #add mssql user
 RUN groupadd -g 10001 mssql && \
