@@ -116,3 +116,15 @@ resource "kubernetes_secret" "sql_connection_string" {
     ConnectionStrings__DatabaseDllConnection = var.db_connection
   }
 }
+
+resource "kubernetes_secret" "sql_connection_string_user" {
+  metadata {
+    name      = "db-connection-user"
+    namespace = var.kube_namespace
+  }
+
+  data = {
+    ConnectionStrings__DefaultConnection     = var.db_connection_user
+    ConnectionStrings__DatabaseDllConnection = var.db_connection_user
+  }
+}

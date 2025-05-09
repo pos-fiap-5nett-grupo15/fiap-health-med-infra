@@ -53,6 +53,11 @@ variable "db_connection" {
   type        = string
   sensitive   = true
 }
+variable "db_connection_user" {
+  description = "Sql Server Connection String - encrypted"
+  type        = string
+  sensitive   = true
+}
 
 variable "storage_account_name" {
   description = "Azure storage accout name."
