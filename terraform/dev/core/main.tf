@@ -72,7 +72,7 @@ resource "kubernetes_namespace" "hk" {
   metadata {
     name = var.kube_namespace
   }
-  depends_on = [ module.aks ]
+  depends_on = [module.aks]
 }
 
 module "storage" {
@@ -85,6 +85,7 @@ module "storage" {
   account_replication_type = "LRS"
   storage_share_name       = var.storage_share_name
   storage_share_quota      = 10
+  depends_on               = [module.resource_group]
 }
 
 module "sql_server_config_map" {
@@ -111,6 +112,7 @@ resource "kubernetes_secret" "sql_connection_string" {
   }
 
   data = {
-    ConnectionStrings__DefaultConnection = var.db_connection
+    ConnectionStrings__DefaultConnection     = var.db_connection
+    ConnectionStrings__DatabaseDllConnection = var.db_connection
   }
 }

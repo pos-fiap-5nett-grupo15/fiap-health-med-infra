@@ -73,3 +73,13 @@ Após o push, você pode verificar se a imagem foi enviada corretamente para o A
 - Se você encontrar algum erro durante o processo, verifique se você tem as permissões necessárias para fazer push para o ACR.
 
 Se você tiver mais perguntas ou precisar de mais assistência, sinta-se à vontade para perguntar!
+
+
+
+## Acessar Rabbit MQ Management
+
+Para acessar a página de gerenciamento, basta fazer um port foward para o pod do rabbit mq. Isto pode ser feito com o seguinte comando:
+
+```shell
+   kubectl port-forward service/rabbitmq-service-management 15672:80 -n hk
+```

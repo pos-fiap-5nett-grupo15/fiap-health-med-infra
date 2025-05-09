@@ -48,6 +48,11 @@ svc_pass          = "senha_service"
 
 ```
 
+7. Criar volume
+
+```shell
+  kubectl apply -f volume.yaml
+
 ## Destruição
 
 

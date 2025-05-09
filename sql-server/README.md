@@ -30,3 +30,20 @@ Para visualizar os logs do container:
 ```shell
 docker logs sql1
 ```
+
+
+## Criar secret da connection String
+
+
+
+
+
+```shell
+kubectl delete secret db-connection -n hk
+kubectl create secret generic db-connection \
+  --from-literal ConnectionStrings__DefaultConnection="Server=sql-server-service;Database=medschedule;User Id=migration_user;Password=Q1w2e3r4;TrustServerCertificate=True;MultipleActiveResultSets=true;" \
+  --from-literal ConnectionStrings__DatabaseDllConnection="Server=sql-server-service;Database=medschedule;User Id=migration_user;Password=Q1w2e3r4;TrustServerCertificate=True;MultipleActiveResultSets=true;" \
+  --namespace=hk
+```
+
+kubectl create secret opaque db-connection\
