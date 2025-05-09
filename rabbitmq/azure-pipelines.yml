@@ -1,0 +1,77 @@
+
+trigger:
+  branches:
+    include:
+      - develop
+
+  paths:
+    include:
+      - rabbitmq/*
+    exclude:
+      - rabbitmq/README.md
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: $(_dockerRegistryServiceConnection)
+  containerRegistry: $(_containerRegistry)
+  k8s-deployment: $(_k8s-deployment)
+  kubernetesNamespace: $(_kubernetesNamespace)
+  k8sPathName: 'k8s'
+  tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
+
+  # RabbitMQ
+  rabbitmqImageRepository: $(_rabbitmqImageRepository)
+  rabbitmqDockerfilePath: 'rabbitmq/Dockerfile'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build RabbitMQ
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo Show ws files.
+          echo $(ls)
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(rabbitmqImageRepository)
+        dockerfile: $(rabbitmqDockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
+
+- stage: Deploy
+  displayName: Deploy Stage
+  jobs:
+  - job: DeployDatabase
+    displayName: Deploy monitoring to AKS
+    steps:
+      - script: ls $(System.DefaultWorkingDirectory)/rabbitmq
+        displayName: "Check folder RabbitMQ"
+      - script: |
+          cat $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml
+          sed -i 's/PLACEHOLDER_NAMESPACE/$(kubernetesNamespace)/g' $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml
+          sed -i 's/PLACEHOLDER_CONTAINER_REGISTRY/$(containerRegistry)/g' $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml
+          sed -i 's/PLACEHOLDER_IMAGE_REPOSITORY/$(rabbitmqImageRepository)/g' $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml
+          sed -i 's/PLACEHOLDER_TAG/$(tag)/g' $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml
+          cat $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml
+        displayName: 'Replace variables in YAML'
+      - task: kubernetes@1
+        displayName: "Apply Deployment YAML"
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'fiap-aks-service-conn'
+          namespace: $(kubernetesNamespace)
+          command: apply
+          arguments: -f $(System.DefaultWorkingDirectory)/rabbitmq/k8s.dev.yaml

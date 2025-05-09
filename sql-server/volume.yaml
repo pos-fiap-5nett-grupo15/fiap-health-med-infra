@@ -1,0 +1,25 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile
+  namespace: hk
+provisioner: file.csi.azure.com
+parameters:
+  skuName: Standard_LRS
+allowVolumeExpansion: true
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sql-server-pv
+  namespace: hk
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefile
+  azureFile:
+    secretName: hkstorage-secret
+    shareName: sql-server-fileshare
+    readOnly: false
