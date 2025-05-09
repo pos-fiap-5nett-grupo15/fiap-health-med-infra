@@ -64,8 +64,8 @@ services:
     container_name: bff-app-1
 
     environment:
-      ServicesSettings__UserService__BaseURL: http://user-app:81
-      ServicesSettings__ScheduleService__BaseURL: http://schedule-app:80/
+      ServicesSettings__UserService__BaseURL: http://user-app:8080
+      ServicesSettings__ScheduleService__BaseURL: http://schedule-app:8080/
       <<: *common-environment
     ports:
       - "82:8080"
@@ -73,7 +73,7 @@ services:
       - user-app
       - schedule-worker
       - schedule-app
-    entrypoint: ["./wait-for-it.sh", "user-app:8081", "--", "dotnet", "Fiap.Health.Med.Bff.Api.dll"]
+    entrypoint: ["./wait-for-it.sh", "user-app:8080", "--", "dotnet", "Fiap.Health.Med.Bff.Api.dll"]
     networks:
       - default
 networks:
