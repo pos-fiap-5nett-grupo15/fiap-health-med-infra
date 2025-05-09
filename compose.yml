@@ -6,7 +6,7 @@ x-common-environment: &common-environment
 
 services:
   sql-server:
-    image: mssql-hack:latest
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-infra-sql-server:latest
     container_name: sql-server-1
     environment:
       - ACCEPT_EULA=Y
@@ -25,7 +25,7 @@ services:
     networks:
       - default
   schedule-app:
-    image: schedule-app
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-schedule-manager-api:latest
     container_name: schedule-app-1
     ports:
       - "80:8080"
@@ -37,7 +37,7 @@ services:
     networks:
       - default
   schedule-worker:
-    image: schedule-worker
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-schedule-manager-worker:latest
     container_name: schedule-worker-1
     environment:
       ConsumerSettings__Host: rabbit-mq
@@ -48,7 +48,7 @@ services:
     networks:
       - default
   user-app:
-    image: user-app
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-user-manager-api:latest
     container_name: user-app-1
     ports:
       - "81:8080"
@@ -60,22 +60,12 @@ services:
     networks:
       - default
   bff-app:
-    image: bff-app
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-bff-api:latest
     container_name: bff-app-1
 
     environment:
       ServicesSettings__UserService__BaseURL: http://user-app:81
-      ServicesSettings__UserService__Endpoints__0__Name: Doctor_GetOneByConcilAsync
-      ServicesSettings__UserService__Endpoints__0__Resource: Doctor
-      ServicesSettings__UserService__Endpoints__1__Name: Doctor_CreateAsync
-      ServicesSettings__UserService__Endpoints__1__Resource: Doctor
-      ServicesSettings__UserService__Endpoints__2__Name: Patient_GetOneByConcilAsync
-      ServicesSettings__UserService__Endpoints__2__Resource: Patient
-      ServicesSettings__UserService__Endpoints__3__Name: Patient_CreateAsync
-      ServicesSettings__UserService__Endpoints__3__Resource: Patient/Document
       ServicesSettings__ScheduleService__BaseURL: http://schedule-app:80/
-      ServicesSettings__ScheduleService__Endpoints__0__Name: Schedule_UpdateAsync
-      ServicesSettings__ScheduleService__Endpoints__0__Resource: api/Schedule
       <<: *common-environment
     ports:
       - "82:8080"
