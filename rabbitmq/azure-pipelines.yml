@@ -2,9 +2,7 @@
 trigger:
   branches:
     include:
-      - main
-      - dev
-      - feat/kubernetes
+      - develop
 
   paths:
     include:
