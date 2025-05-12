@@ -1,4 +1,38 @@
 
+# Hackaton - Fiap.Health.Med.Infra
+
+Projeto criado pelo **Grupo 15** do curso de **Arquitetura de Sistemas .NET com Azure** da Fiap para atender o Hackaton.
+
+> O projeto de infra tem como função manter todas as configurações dos recursos do ambiente, visando facilitar a criação da infraestrutura com todos os recursos necessários e preparados para o funcionamento das aplicações
+
+
+## Autores
+
+- Grupo 15
+
+|Integrantes
+|--|
+| Caio Vinícius Moura Santos Maia |
+| Evandro Prates Silva |
+| Guilherme Castro Batista Pereira |
+| Luis Gustavo Gonçalves Reimberg |
+
+
+## Stack utilizada
+
+|Tecnologia utilizada|
+|--|
+|RabbitMQ|
+|SQL Server|
+|Terraform|
+|Docker|
+
+
+## Funcionalidades
+
+- Configurações de fila
+- Configurações do banco de dados
+- Configurações de infraestrutura como código(IaC)
 
 
 ## Como Rodar o Banco de Dados
