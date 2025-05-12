@@ -6,7 +6,7 @@ x-common-environment: &common-environment
 
 services:
   sql-server:
-    image: mssql-hack:latest
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-infra-sql-server:latest
     container_name: sql-server-1
     environment:
       - ACCEPT_EULA=Y
@@ -25,7 +25,7 @@ services:
     networks:
       - default
   schedule-app:
-    image: schedule-app
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-schedule-manager-api:latest
     container_name: schedule-app-1
     ports:
       - "80:8080"
@@ -37,7 +37,7 @@ services:
     networks:
       - default
   schedule-worker:
-    image: schedule-worker
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-schedule-manager-worker:latest
     container_name: schedule-worker-1
     environment:
       ConsumerSettings__Host: rabbit-mq
@@ -48,7 +48,7 @@ services:
     networks:
       - default
   user-app:
-    image: user-app
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-user-manager-api:latest
     container_name: user-app-1
     ports:
       - "81:8080"
@@ -57,6 +57,23 @@ services:
     depends_on:
       - sql-server
     entrypoint: ["./wait-for-it.sh", "sql-server:1433", "--", "dotnet", "Fiap.Health.Med.User.Manager.Api.dll"]
+    networks:
+      - default
+  bff-app:
+    image: fiapacrhackathon.azurecr.io/fiap-health-med-bff-api:latest
+    container_name: bff-app-1
+
+    environment:
+      ServicesSettings__UserService__BaseURL: http://user-app:8080
+      ServicesSettings__ScheduleService__BaseURL: http://schedule-app:8080/
+      <<: *common-environment
+    ports:
+      - "82:8080"
+    depends_on:
+      - user-app
+      - schedule-worker
+      - schedule-app
+    entrypoint: ["./wait-for-it.sh", "user-app:8080", "--", "dotnet", "Fiap.Health.Med.Bff.Api.dll"]
     networks:
       - default
 networks:
